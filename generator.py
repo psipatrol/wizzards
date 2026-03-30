@@ -6,4 +6,4 @@ def fight(wizard1, wizard2):
         else:
             yield wizard2, wizard1, wizard2.attack(wizard1)
         i += 1
-    yield (wizard1, wizard2, "..." + wizard2.name + " has been slayed") if wizard1.hp > wizard2.hp else (wizard2, wizard1, "..." + wizard1.name + " has been slayed")
+    yield (wizard1, wizard2, "SLAYED") if wizard1.hp > wizard2.hp else (wizard2, wizard1, "SLAYED")

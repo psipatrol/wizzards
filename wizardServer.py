@@ -52,9 +52,13 @@ send("There will be blood")
 time.sleep(0.5)
 
 for attacker, defender, fight_unit in fight(list(wizard_conn_map.keys())[0], list(wizard_conn_map.keys())[1]):
-    send_to(attacker, f"You attack {defender.name} {fight_unit}")
-    send_to(defender, f"{attacker.name} attacks you {fight_unit}")
-    time.sleep(0.5)
+    if fight_unit == "SLAYED":
+        send_to(attacker, f"You slayed {defender.name}")
+        send_to(defender, f"{attacker.name} slayed you")
+    else:
+        send_to(attacker, f"You attack {defender.name} {fight_unit}")
+        send_to(defender, f"{attacker.name} attacks you {fight_unit}")
+        time.sleep(0.5)
 
 send("...")
 
