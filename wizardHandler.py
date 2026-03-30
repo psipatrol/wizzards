@@ -1,4 +1,3 @@
-from attack import Attack
 from attackType import AttackType
 from wizard import Wizard
 

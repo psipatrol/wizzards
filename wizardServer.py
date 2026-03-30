@@ -2,12 +2,10 @@ import socket
 import threading
 import time
 
-import wizard
 from conn_thread import server_listen
 from generator import fight
 
 serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-serverSocket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
 serverSocket.bind(('127.0.0.1', 9797))
 serverSocket.listen(2)
 serverSocket.settimeout(30.0)

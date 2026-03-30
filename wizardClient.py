@@ -1,7 +1,6 @@
 import socket
 
 clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-clientSocket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
 
 clientSocket.connect(('127.0.0.1', 9797))
 name = input(clientSocket.recv(1024).decode())

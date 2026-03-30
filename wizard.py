@@ -18,10 +18,11 @@ class Wizard:
     def __init__(self, name, hp, attacks, strength, defense, agility):
         self.name = name
         max_val = max(hp, defense, strength, agility)
-        self.hp = clamp(0, max_val, hp, 80)
-        self.defense = clamp(0, max_val, defense, 80)
-        self.strength = clamp(0, max_val, strength, 80)
-        self.agility = clamp(0, max_val, agility, 80)
+        sum = hp + defense + strength + agility
+        self.hp = clamp(0, sum, hp, 80) * 2
+        self.defense = clamp(0, sum, defense, 80)
+        self.strength = clamp(0, sum, strength, 80)
+        self.agility = clamp(0, sum, agility, 80)
         self.attacks = list(attacks)
         self.effects = set()
         self.burning_duration = 0
@@ -43,24 +44,22 @@ class Wizard:
             current_effects += f"\n{effect.value}"
         return f"HP: {self.hp} {current_effects}"
 
-
-
     def attack(self, opponent):
-        my_effect = ""
         other_effect = ""
         resolve = ""
-        if Effect.BURNING in self.effects:
-            self.burning_duration -= 1
-            if self.burning_duration <= 0:
-                self.effects.remove(Effect.BURNING)
-        if Effect.BURNING in self.effects:
-            self.hp -= 2
-            # my_effect += " \n\tburning -2 HP"
+        dmg_reducer = 0
         if Effect.STUNNED in self.effects:
             self.effects.remove(Effect.STUNNED)
-            # my_effect += "\n\tbut you are stunned, attack canceled"
         else:
-            # return "you are stunned"
+            if Effect.BURNING in self.effects:
+                self.hp -= 1
+                self.burning_duration -= 1
+                if self.burning_duration <= 0:
+                    self.effects.remove(Effect.BURNING)
+            if Effect.INSANE in self.effects:
+                resolve += " with insanity in eyes "
+                dmg_reducer = 1
+                self.effects.remove(Effect.INSANE)
             if opponent.try_dodge():
                 resolve = "\n\tattack dodged"
             elif opponent.defense > self.defense and random.uniform(0.0, 1.0) > 0.5:
@@ -68,18 +67,21 @@ class Wizard:
             else:
                 if self.attacks:
                     atck = random.choice(self.attacks)
-                    if atck is AttackType.FIREBALL:
+                    if atck is AttackType.FIREBALL and 10 > random.uniform(0, 20):
                         opponent.add_effect(atck)
                         other_effect += " fire"
-                    if atck is AttackType.MEOW:
+                    if atck is AttackType.MEOW and 10 > random.uniform(0, 20):
                         opponent.add_effect(atck)
                         other_effect += " stun"
+                    if atck is AttackType.ICY_KISS and 10 > random.uniform(0, 20):
+                        opponent.add_effect(atck)
+                        other_effect += " insan"
 
-                real_dmh = int(random.uniform(1.0, 1.4) + self.strength / 20)
+                real_dmh = int(random.uniform(1.0, 1.4) + self.strength / 32 - dmg_reducer)
                 opponent.hp -= real_dmh
-                resolve = "with " + str(real_dmh) + " DMG..."
+                resolve += "with " + str(real_dmh) + " DMG..."
 
-        return f"{resolve} {my_effect} {other_effect}"
+        return f"{resolve} {other_effect}"
 
     def try_dodge(self):
         if self.agility > random.uniform(0, 160):
