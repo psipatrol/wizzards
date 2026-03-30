@@ -68,6 +68,6 @@ def compute_attacks(atcks):
     attacks = []
     for i, e in enumerate(AttackType):
         if (i+1) in atcks:
-            attacks.append(Attack(e, 10))
+            attacks.append(e)
     return attacks
         

@@ -48,16 +48,18 @@ while len(connections) < maxWizard:
 while len(wizard_conn_map) < maxWizard:
     time.sleep(0.1)
 
-send("There will be blood")
+send("There will be blood\n")
 time.sleep(0.5)
 
 for attacker, defender, fight_unit in fight(list(wizard_conn_map.keys())[0], list(wizard_conn_map.keys())[1]):
     if fight_unit == "SLAYED":
-        send_to(attacker, f"You slayed {defender.name}")
-        send_to(defender, f"{attacker.name} slayed you")
+        send_to(attacker, f"\nYou slayed {defender.name}")
+        send_to(defender, f"\n{attacker.name} slayed you")
     else:
         send_to(attacker, f"You attack {defender.name} {fight_unit}")
         send_to(defender, f"{attacker.name} attacks you {fight_unit}")
+        send_to(attacker, f"{attacker.current_status()}\n")
+        send_to(defender, f"{defender.current_status()}\n")
         time.sleep(0.5)
 
 send("...")
